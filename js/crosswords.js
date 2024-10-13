@@ -580,10 +580,7 @@ function drawArrow(context, top_x, top_y, square_size, direction = "right") {
 
         this.nav_prev_word_button = this.root.find('#nav_prev_word_button');
         this.nav_next_word_button = this.root.find('#nav_next_word_button');
-        console.log(this.nav_prev_word_button);
         
-       
-
         // function to process uploaded files
         function processFiles(files) {
           loadFromFile(files[0], FILE_PUZ).then(
@@ -890,14 +887,6 @@ function drawArrow(context, top_x, top_y, square_size, direction = "right") {
             clue: clueMapping[word.id]
           });
         }
-        this.nav_prev_word_button.onclick = () => {
-          this.nav_prev_word();
-          console.log("AAAAAAAAAAAAAAAAAAAAAAA");
-        }
-        this.nav_next_word_button.onclick = () => this.nav_next_word();
-
-        console.log(this.nav_prev_word_button);
-
         this.completeLoad();
 
       }
@@ -2049,16 +2038,13 @@ function drawArrow(context, top_x, top_y, square_size, direction = "right") {
         }
       }
       nav_prev_word(){
-        // var skip_filled_words = this.config.tab_key === 'tab_skip';
-        // var skip_filled_words = this.config.tab_key === 'tab_skip';
-        this.moveToNextWord(true);
-        console.log("move prev");
+        var skip_filled_words = xword.config.tab_key === 'tab_skip';
+        this.moveToNextWord(true, skip_filled_words);
       }
 
       nav_next_word(){
-        // var skip_filled_words = this.config.tab_key === 'tab_skip';
-        this.moveToNextWord(false);
-        console.log("move next");
+        var skip_filled_words = xword.config.tab_key === 'tab_skip';
+        this.moveToNextWord(false, skip_filled_words);
       }
       moveToFirstCell(to_last) {
         if (this.selected_word) {
