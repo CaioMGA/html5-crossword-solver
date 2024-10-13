@@ -34,6 +34,7 @@ try {DarkReader} catch {DarkReader = false;}
 // confetti code from https://gist.github.com/elrumo/3055a9163fd2d0d19f323db744b0a094
 var confetti={maxCount:150,speed:2,frameInterval:15,alpha:1,gradient:!1,start:null,stop:null,toggle:null,pause:null,resume:null,togglePause:null,remove:null,isPaused:null,isRunning:null};!function(){confetti.start=s,confetti.stop=w,confetti.toggle=function(){e?w():s()},confetti.pause=u,confetti.resume=m,confetti.togglePause=function(){i?m():u()},confetti.isPaused=function(){return i},confetti.remove=function(){stop(),i=!1,a=[]},confetti.isRunning=function(){return e};var t=window.requestAnimationFrame||window.webkitRequestAnimationFrame||window.mozRequestAnimationFrame||window.oRequestAnimationFrame||window.msRequestAnimationFrame,n=["rgba(30,144,255,","rgba(107,142,35,","rgba(255,215,0,","rgba(255,192,203,","rgba(106,90,205,","rgba(173,216,230,","rgba(238,130,238,","rgba(152,251,152,","rgba(70,130,180,","rgba(244,164,96,","rgba(210,105,30,","rgba(220,20,60,"],e=!1,i=!1,o=Date.now(),a=[],r=0,l=null;function d(t,e,i){return t.color=n[Math.random()*n.length|0]+(confetti.alpha+")"),t.color2=n[Math.random()*n.length|0]+(confetti.alpha+")"),t.x=Math.random()*e,t.y=Math.random()*i-i,t.diameter=10*Math.random()+5,t.tilt=10*Math.random()-10,t.tiltAngleIncrement=.07*Math.random()+.05,t.tiltAngle=Math.random()*Math.PI,t}function u(){i=!0}function m(){i=!1,c()}function c(){if(!i)if(0===a.length)l.clearRect(0,0,window.innerWidth,window.innerHeight),null;else{var n=Date.now(),u=n-o;(!t||u>confetti.frameInterval)&&(l.clearRect(0,0,window.innerWidth,window.innerHeight),function(){var t,n=window.innerWidth,i=window.innerHeight;r+=.01;for(var o=0;o<a.length;o++)t=a[o],!e&&t.y<-15?t.y=i+100:(t.tiltAngle+=t.tiltAngleIncrement,t.x+=Math.sin(r)-.5,t.y+=.5*(Math.cos(r)+t.diameter+confetti.speed),t.tilt=15*Math.sin(t.tiltAngle)),(t.x>n+20||t.x<-20||t.y>i)&&(e&&a.length<=confetti.maxCount?d(t,n,i):(a.splice(o,1),o--))}(),function(t){for(var n,e,i,o,r=0;r<a.length;r++){if(n=a[r],t.beginPath(),t.lineWidth=n.diameter,e=(i=n.x+n.tilt)+n.diameter/2,o=n.y+n.tilt+n.diameter/2,confetti.gradient){var l=t.createLinearGradient(e,n.y,i,o);l.addColorStop("0",n.color),l.addColorStop("1.0",n.color2),t.strokeStyle=l}else t.strokeStyle=n.color;t.moveTo(e,n.y),t.lineTo(i,o),t.stroke()}}(l),o=n-u%confetti.frameInterval),requestAnimationFrame(c)}}function s(t,n,o){var r=window.innerWidth,u=window.innerHeight;window.requestAnimationFrame=window.requestAnimationFrame||window.webkitRequestAnimationFrame||window.mozRequestAnimationFrame||window.oRequestAnimationFrame||window.msRequestAnimationFrame||function(t){return window.setTimeout(t,confetti.frameInterval)};var m=document.getElementById("confetti-canvas");null===m?((m=document.createElement("canvas")).setAttribute("id","confetti-canvas"),m.setAttribute("style","display:block;z-index:999999;pointer-events:none;position:fixed;top:0"),document.body.prepend(m),m.width=r,m.height=u,window.addEventListener("resize",(function(){m.width=window.innerWidth,m.height=window.innerHeight}),!0),l=m.getContext("2d")):null===l&&(l=m.getContext("2d"));var s=confetti.maxCount;if(n)if(o)if(n==o)s=a.length+o;else{if(n>o){var f=n;n=o,o=f}s=a.length+(Math.random()*(o-n)+n|0)}else s=a.length+n;else o&&(s=a.length+o);for(;a.length<s;)a.push(d({},r,u));e=!0,i=!1,c(),t&&window.setTimeout(w,t)}function w(){e=!1}}();
 
+var xword;
 // hex string to RGB array and vice versa
 // thanks https://stackoverflow.com/a/39077686
 const hexToRgb = hex =>
@@ -142,8 +143,8 @@ function drawArrow(context, top_x, top_y, square_size, direction = "right") {
     var default_config = {
       hover_enabled: false, // enables or disables cell hover effect
       color_hover: '#FFFFAA', // color for hovered cell (if enabled)
-      color_selected: '#FF4136', // color for selected cell
-      color_word: '#FEE300', // color for selected word
+      color_selected: '#FFED1D', // color for selected cell
+      color_word: '#F9EB8B', // color for selected word
       color_hilite: '#F8E473', // color for corresponding cells (in acrostics and codewords)
       color_none: '#FFFFFF', // color for "null" or "void" cells
       background_color_clue: '#666666', // color for "clue" cells
@@ -164,8 +165,8 @@ function drawArrow(context, top_x, top_y, square_size, direction = "right") {
       // you can move always or only when a cell is filled
       arrow_direction: 'arrow_move_filled', // arrow_move or arrow_move_filled
       // behavior of the space bar: delete a letter or switch directions
-      space_bar: 'space_clear', // space_clear or space_switch
-      timer_autostart: false, // should the timer start automatically
+      space_bar: 'space_switch', // space_clear or space_switch
+      timer_autostart: true, // should the timer start automatically
       dark_mode_enabled: false, // should dark mode be the default
       // behavior of the "tab" key
       // "tab_noskip" moves to the next word
@@ -288,11 +289,14 @@ function drawArrow(context, top_x, top_y, square_size, direction = "right") {
               <button type="button" class="cw-button cw-button-timer">00:00</button>
             </div>
             <div class="cw-top-text-wrapper">
-              <div class="cw-top-text">
+            <button id="nav_prev_word_button" onclick="xword.nav_prev_word()" class="next_prev_word"><</button>  
+            <div class="cw-top-text">
                 <span class="cw-clue-number"></span>
-                <span class="cw-clue-text"></span>
+                <p class="cw-clue-text"></span>
               </div>
+            <button id="nav_next_word_button" onclick="xword.nav_next_word()"class="next_prev_word">></button>  
             </div>
+            
             <input type="text" class="cw-hidden-input">
             <div class="cw-canvas">
               <canvas></canvas>
@@ -338,6 +342,7 @@ function drawArrow(context, top_x, top_y, square_size, direction = "right") {
       );
     })();
 
+    
     function loadFromFile(file, type, deferred) {
       var reader = new FileReader();
       deferred = deferred || $.Deferred();
@@ -451,6 +456,7 @@ function drawArrow(context, top_x, top_y, square_size, direction = "right") {
           alert(e.message);
           console.log(e);
         }
+        xword = crossword;
         return crossword;
       },
     };
@@ -572,6 +578,12 @@ function drawArrow(context, top_x, top_y, square_size, direction = "right") {
         this.timer_button = this.root.find('.cw-button-timer');
         this.xw_timer_seconds = 0;
 
+        this.nav_prev_word_button = this.root.find('#nav_prev_word_button');
+        this.nav_next_word_button = this.root.find('#nav_next_word_button');
+        console.log(this.nav_prev_word_button);
+        
+       
+
         // function to process uploaded files
         function processFiles(files) {
           loadFromFile(files[0], FILE_PUZ).then(
@@ -650,7 +662,9 @@ function drawArrow(context, top_x, top_y, square_size, direction = "right") {
 
         this.root.appendTo(this.parent);
         setBreakpointClasses(this.root);
+
       }
+
 
       error(message) {
         alert(message);
@@ -876,7 +890,13 @@ function drawArrow(context, top_x, top_y, square_size, direction = "right") {
             clue: clueMapping[word.id]
           });
         }
-        console.log(this);
+        this.nav_prev_word_button.onclick = () => {
+          this.nav_prev_word();
+          console.log("AAAAAAAAAAAAAAAAAAAAAAA");
+        }
+        this.nav_next_word_button.onclick = () => this.nav_next_word();
+
+        console.log(this.nav_prev_word_button);
 
         this.completeLoad();
 
@@ -1791,9 +1811,9 @@ function drawArrow(context, top_x, top_y, square_size, direction = "right") {
             this.checkIfSolved();
             break;
           case 9: // tab
-            var skip_filled_words = this.config.tab_key === 'tab_skip';
-            if (e.shiftKey) {
-              this.moveToNextWord(true, skip_filled_words);
+          var skip_filled_words = this.config.tab_key === 'tab_skip';
+          if (e.shiftKey) {
+            this.moveToNextWord(true, skip_filled_words);
             } else {
               this.moveToNextWord(false, skip_filled_words);
             }
@@ -2028,7 +2048,18 @@ function drawArrow(context, top_x, top_y, square_size, direction = "right") {
           }
         }
       }
+      nav_prev_word(){
+        // var skip_filled_words = this.config.tab_key === 'tab_skip';
+        // var skip_filled_words = this.config.tab_key === 'tab_skip';
+        this.moveToNextWord(true);
+        console.log("move prev");
+      }
 
+      nav_next_word(){
+        // var skip_filled_words = this.config.tab_key === 'tab_skip';
+        this.moveToNextWord(false);
+        console.log("move next");
+      }
       moveToFirstCell(to_last) {
         if (this.selected_word) {
           var cell = to_last
