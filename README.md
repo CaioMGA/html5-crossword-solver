@@ -9,7 +9,7 @@
 
 ## Installation
 ### Using git command line (preferred)
-Use the command `git clone --recurse-submodules https://github.com/crosswordnexus/html5-crossword-solver/` in whatever directory you'd like on your server. If you ever want to update you can run a simple `git pull` from the `html5-crossword-solver` directory.
+Use the command `git clone --recurse-submodules https://github.com/caiomga/html5-crossword-solver/` in whatever directory you'd like on your server. If you ever want to update you can run a simple `git pull` from the `html5-crossword-solver` directory.
 
 ### Using a zip file
 Head over to https://github.com/crosswordnexus/html5-crossword-solver/releases and download the most recent `html5-crossword-solver.zip`. Unzip it and it will create a `html5-crossword-solver` directory.
