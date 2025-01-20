@@ -778,13 +778,13 @@ function drawArrow(context, top_x, top_y, square_size, direction = "right") {
           var clueMapping = {};
           var across_group = new CluesGroup(this, {
             id: CLUES_TOP,
-            title: 'ACROSS',
+            title: 'HORIZONTAL',
             clues: [],
             words_ids: [],
           });
           var down_group = new CluesGroup(this, {
             id: CLUES_BOTTOM,
-            title: 'DOWN',
+            title: 'VERTICAL',
             clues: [],
             words_ids: [],
           });
